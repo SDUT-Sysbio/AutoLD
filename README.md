@@ -25,14 +25,15 @@ if (!require("remotes", quietly = TRUE)) {
 }
 
 # Install AutoLD from GitHub (SDUT-Sysbio)
-remotes::install_github("SDUT-Sysbio/AutoLD", build_vignettes = TRUE)
+remotes::install_github("SDUT-Sysbio/AutoLD", build_vignettes = TRUE).
 
+```
 ## Quick Start
 
 1. Computer Simulation
 AutoLD provides built-in functions to simulate both autotetraploid and autohexaploid genotypes under specific LD and Double Reduction conditions. This is highly useful for power analysis and method validation.
 
-R
+```R
 library(AutoLD)
 
 # --- Example A: Autotetraploid (4x) Simulation ---
@@ -50,11 +51,12 @@ sim_data_6x <- sim_2locus_6x_cLD(n_ind = 500, pA = 0.5, pB = 0.5, D = 0.05, alph
 # Estimate LD and DR from the simulated 6x data
 sim_result_6x <- LD_test_optimized_final(sim_data_6x)
 print(sim_result_6x)
+
+```
 2. Real Data Analysis
 Here is a minimal example of how to perform a genome-wide LD scan using the built-in autotetraploid Arabidopsis arenosa dataset.
 
-R
-# Load the pre-processed empirical dataset
+```R
 data("Arenosa")
 geno_df <- Arenosa$Arenosa_gen
 info_df <- Arenosa$Arenosa_gen_info
@@ -72,19 +74,25 @@ results_chr1 <- AutoLD_optimized(
 
 # View the core metrics
 head(results_chr1[, c("POS1", "POS2", "Dist_bp", "aA", "Deab_r", "Deab_DS")])
-Documentation
+
+```
+### Documentation
+
 Detailed documentation is embedded within the package. For a complete walkthrough of real data processing, statistical significance testing, and downstream visualizations, please refer to the package vignette:
 
-R
+```R
 # Open the comprehensive HTML tutorial
 vignette("AutoLD_RealData_Tutorial")
+```
 To view the manual for specific functions:
 
-R
+```R
 ?AutoLD_optimized
 ?sim_2locus_4x_cLD
 ?sim_2locus_6x_cLD
-Result Interpretation
+
+```
+### Result Interpretation
 The output data frame provides highly interpretable metrics for downstream population genetics analysis:
 
 Dist_bp: Physical distance (bp), essential for LD decay modeling.
@@ -97,7 +105,8 @@ Deab_DS: Standardized LD on the D-prime scale (analogous to D').
 
 P_Value: Rigorous Likelihood Ratio Test (LRT) statistics assessing the significance of both double reduction and linkage.
 
-Citation
+```
+### Citation
 If you use AutoLD in your research, please cite our upcoming publication:
 
 Jiang, L. et al. (2026). AutoLD: A novel statistical framework for linkage disequilibrium and double reduction estimation in autopolyploids. (Submitted / In Preparation).

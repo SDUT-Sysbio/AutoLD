@@ -8,11 +8,11 @@ AutoLD is a high-performance, statistically rigorous R package designed for geno
 
 ## Key Features
 
-- Joint Estimation Model: Accurately estimates fundamental 2nd-order LD (r and D' equivalents) while dynamically accounting for locus-specific double reduction during polyploid meiosis.
-- High-Order LD Statistics: Captures complex multi-allelic co-segregations by evaluating higher-order LD components.
-- Multi-Ploidy Support: Comprehensively supports both autotetraploid (4x) and autohexaploid (6x) genomic datasets.
-- Ultra-Fast Parallel Scanning: Equipped with AutoLD_optimized, a sliding-window engine built on native multi-core architectures, capable of rapidly scanning chromosomal-scale data.
-- Built-in Simulations: Includes robust simulation modules for power analysis and statistical validation.
+- **Joint Estimation Model**: Accurately estimates fundamental 2nd-order LD (r and D' equivalents) while dynamically accounting for locus-specific double reduction during polyploid meiosis.
+- **High-Order LD Statistics**: Captures complex multi-allelic co-segregations by evaluating higher-order LD components.
+- **Multi-Ploidy Support**: Comprehensively supports both autotetraploid (4x) and autohexaploid (6x) genomic datasets.
+- **Ultra-Fast Parallel Scanning**: Equipped with `AutoLD_optimized`, a sliding-window engine built on native multi-core architectures, capable of rapidly scanning chromosomal-scale data.
+- **Built-in Simulations**: Includes robust simulation modules for power analysis and statistical validation.
 
 ## Installation
 
@@ -26,7 +26,6 @@ if (!require("remotes", quietly = TRUE)) {
 
 # Install AutoLD from GitHub (SDUT-Sysbio)
 remotes::install_github("SDUT-Sysbio/AutoLD", build_vignettes = TRUE)
-
 Quick Start
 1. Computer Simulation
 AutoLD provides built-in functions to simulate both autotetraploid and autohexaploid genotypes under specific LD and Double Reduction conditions. This is highly useful for power analysis and method validation.

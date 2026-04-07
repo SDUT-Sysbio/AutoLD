@@ -1,0 +1,123 @@
+---
+title: "Real Data Analysis using AutoLD: Arabidopsis arenosa"
+author: "Libo Jiang et al."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Real Data Analysis using AutoLD: Arabidopsis arenosa}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This tutorial demonstrates how to use the AutoLD package to perform genome-wide linkage disequilibrium (LD) scanning and estimate double reduction (DR) rates using real sequencing data from autopolyploids. Here, we use empirical data from the autotetraploid Arabidopsis arenosa as a case study.
+
+```{r setup}
+library(AutoLD)
+```
+## 1. Preparing the Input Data
+
+Before running the highly optimized `AutoLD_optimized` pipeline, you need to prepare two strictly synchronized datasets: a genotype dosage matrix (`geno_df`) and a marker information table (`info_df`). 
+
+In this tutorial, we will load an example dataset stored as an external RDS file within the package directory.
+
+```{r load_data}
+# 1. Get the path to the example RDS file included in the package
+file_path <- system.file("extdata", "Arenosa_example.RDS", package = "AutoLD")
+
+# 2. Read the RDS file
+Arenosa <- readRDS(file_path)
+
+# 3. Extract the genotype matrix and marker information
+geno_df <- Arenosa$Arenosa_gen
+info_df <- Arenosa$Arenosa_gen_info
+```
+
+### 1.1 The Genotype Matrix (geno_df)
+This matrix must contain samples as columns and SNPs as rows. The values represent the allele dosage (e.g., integers ranging from 0 to 4 for autotetraploids). Missing data must be encoded as `NA`.
+
+```{r view_geno}
+# View the first 5 SNPs for the first 5 samples
+head(geno_df[, 1:5])
+```
+
+### 1.2 The Marker Information Table (info_df)
+The information table must contain at least two mandatory columns: `CHROM` (Chromosome or Contig name) and `POS` (Physical position in base pairs). Crucially, the row order of `info_df` must exactly match the row order of `geno_df`.
+
+```{r view_info}
+# View the genomic coordinates of the first few SNPs
+head(info_df[, c("CHROM", "POS", "REF", "ALT")])
+```
+
+---
+
+## 2. Running the Parallel Analysis Pipeline
+
+Using the `AutoLD_optimized` function, we can rapidly compute pairwise LD and double reduction rates across the chromosome using a sliding window approach. 
+
+Note: For real genome-wide scans, it is highly recommended to set `n_cores` to the maximum number of available CPU cores (e.g., 20 or 60) to maximize parallel computing efficiency.
+
+```{r run_analysis, eval=FALSE}
+# Run a 200kb sliding window scan on chromosome "LR999451.1" using 4 cores
+results_chr1 <- AutoLD_optimized(
+  chr_name  = "LR999451.1", 
+  geno_df   = geno_df, 
+  info_df   = info_df, 
+  method    = "full", 
+  window_kb = 200, 
+  n_cores   = 4,    
+  ploidy    = 4
+)
+```
+
+---
+
+## 3. Result Interpretation
+
+Upon completion, the function returns a comprehensive data frame. Each row represents the complete LD and double reduction estimation for a specific pair of SNPs.
+
+For demonstration purposes, we will load a pre-computed subset of the results included in the package:
+
+```{r load_results}
+data("arenosa_ld_example")
+head(arenosa_ld_example[, c("CHROM", "POS1", "POS2", "Dist_bp", "aA", "Deab_r", "P_Value.P_Deab")])
+```
+
+### 3.1 Core Metric Descriptions
+
+The output columns are structured into the following logical modules:
+
+- Genomic Metadata:
+  - `Dist_bp`: The physical distance between the two loci (e.g., 1796 bp). This is the fundamental X-axis variable for plotting LD decay curves.
+  - `N_Samples`: The effective sample size used for the pairwise computation (excluding samples with `NA` at either locus).
+
+- Frequencies & Double Reduction Rates:
+  - `pA` / `pB`: The reference allele frequencies for locus 1 and locus 2, respectively.
+  - `aA` / `aB`: The estimated double reduction rates (alpha). These values quantify the intensity of abnormal multivalent pairing and sister chromatid co-segregation during autopolyploid meiosis.
+
+- Standardized LD Metrics:
+  Since raw LD parameters (e.g., `Deab`) are heavily constrained by allele frequencies, we provide two standardized metrics for downstream visualizations:
+  - `Deab_r` (Equivalent to r): The correlation coefficient scale. To plot classical LD decay curves, simply calculate $r^2$ by squaring this value (`Deab_r^2`).
+  - `Deab_DS` (Equivalent to D'): Scaled based on theoretical boundaries. This metric is highly sensitive to historical recombination events.
+
+### 3.2 Statistical Significance (P-values)
+The output includes Likelihood Ratio Test (LRT) P-values for rigorous statistical inference:
+- `P_Value.P_aA`: The P-value testing the presence of significant double reduction at locus 1. A value `< 0.05` provides statistical evidence for local double reduction.
+- `P_Value.P_Deab`: The P-value for fundamental (2nd-order) LD. Extremely small P-values indicate strong genetic linkage.
+- `P_Value.P_DAB`: The P-value for 4th-order LD. Significance here highlights complex, higher-order allelic co-segregation.
+
+---
+
+## 4. Downstream Analysis Guidelines
+
+With the returned data frame, you can seamlessly transition to biological data mining:
+
+1. LD Decay Plotting: Extract `Dist_bp` and `Deab_r`. Compute $r^2 = (Deab\_r)^2$. Generate a scatter plot against physical distance and fit a non-linear decay regression model.
+2. Double Reduction Hotspot Scanning: Extract the genomic coordinates (`POS1`) and their corresponding double reduction rates (`aA`). Generate a Manhattan-style plot to identify regions with elevated double reduction, such as pericentromeric regions or recombination hotspots.

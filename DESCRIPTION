@@ -1,0 +1,29 @@
+Package: AutoLD
+Title: Linkage Disequilibrium Estimation for Autopolyploids with Double Reduction
+Version: 0.1.0
+Authors@R: c(
+    person("Weihao", "Dou", role = "aut"),
+    person("Zhongfan", "Lv", role = "aut"),
+    person("Dongchao", "Ji", role = "aut"),
+    person("Chonghui", "Zhao", role = "aut"),
+    person("Na", "Wang", role = "aut"),
+    person("Feng tang", "Yang", role = "aut"),
+    person("Libo", "Jiang", email = "libojiang@bjfu.edu.cn", role = c("aut", "cre"))
+  )
+Description: A statistical framework for estimating linkage disequilibrium (LD) in autopolyploids. The package provides maximum likelihood estimation algorithms for diploids, autotetraploids, and autohexaploids, uniquely accounting for double reduction. Includes tools for hypothesis testing, parameter standardization, and simulation of autopolyploid genomic data..
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    data.table,
+    MASS,
+    parallel,
+    stats
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Depends: 
+    R (>= 3.5)
+LazyData: true

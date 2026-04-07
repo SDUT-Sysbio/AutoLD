@@ -26,7 +26,7 @@ if (!require("remotes", quietly = TRUE)) {
 
 # Install AutoLD from GitHub (SDUT-Sysbio)
 remotes::install_github("SDUT-Sysbio/AutoLD", build_vignettes = TRUE)
-Quick Start
+## Quick Start
 1. Computer Simulation
 AutoLD provides built-in functions to simulate both autotetraploid and autohexaploid genotypes under specific LD and Double Reduction conditions. This is highly useful for power analysis and method validation.
 library(AutoLD)

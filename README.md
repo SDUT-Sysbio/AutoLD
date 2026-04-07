@@ -26,3 +26,86 @@ if (!require("remotes", quietly = TRUE)) {
 
 # Install AutoLD from GitHub (SDUT-Sysbio)
 remotes::install_github("SDUT-Sysbio/AutoLD", build_vignettes = TRUE)
+
+Quick Start
+1. Computer Simulation
+AutoLD provides built-in functions to simulate both autotetraploid and autohexaploid genotypes under specific LD and Double Reduction conditions. This is highly useful for power analysis and method validation.
+
+R
+library(AutoLD)
+
+# --- Example A: Autotetraploid (4x) Simulation ---
+# Simulate a 2-locus dataset (500 individuals)
+sim_data_4x <- sim_2locus_4x_cLD(n_ind = 500, pA = 0.5, pB = 0.5, D = 0.05, alphaA = 0.05, alphaB = 0.05)
+
+# Estimate LD and DR from the simulated 4x data
+sim_result_4x <- LD_test_optimized_final(sim_data_4x)
+print(sim_result_4x)
+
+# --- Example B: Autohexaploid (6x) Simulation ---
+# Simulate a 2-locus dataset (500 individuals)
+sim_data_6x <- sim_2locus_6x_cLD(n_ind = 500, pA = 0.5, pB = 0.5, D = 0.05, alphaA = 0.05, alphaB = 0.05)
+
+# Estimate LD and DR from the simulated 6x data
+sim_result_6x <- LD_test_optimized_final(sim_data_6x)
+print(sim_result_6x)
+2. Real Data Analysis
+Here is a minimal example of how to perform a genome-wide LD scan using the built-in autotetraploid Arabidopsis arenosa dataset.
+
+R
+# Load the pre-processed empirical dataset
+data("Arenosa")
+geno_df <- Arenosa$Arenosa_gen
+info_df <- Arenosa$Arenosa_gen_info
+
+# Run the high-speed sliding window scan
+results_chr1 <- AutoLD_optimized(
+  chr_name  = "LR999451.1", 
+  geno_df   = geno_df, 
+  info_df   = info_df, 
+  method    = "full", 
+  window_kb = 200, 
+  n_cores   = 4,
+  ploidy    = 4
+)
+
+# View the core metrics
+head(results_chr1[, c("POS1", "POS2", "Dist_bp", "aA", "Deab_r", "Deab_DS")])
+Documentation
+Detailed documentation is embedded within the package. For a complete walkthrough of real data processing, statistical significance testing, and downstream visualizations, please refer to the package vignette:
+
+R
+# Open the comprehensive HTML tutorial
+vignette("AutoLD_RealData_Tutorial")
+To view the manual for specific functions:
+
+R
+?AutoLD_optimized
+?sim_2locus_4x_cLD
+?sim_2locus_6x_cLD
+Result Interpretation
+The output data frame provides highly interpretable metrics for downstream population genetics analysis:
+
+Dist_bp: Physical distance (bp), essential for LD decay modeling.
+
+aA / aB: Estimated Double Reduction rates, revealing abnormal meiotic homologous pairing intensity.
+
+Deab_r: Standardized LD on the correlation scale (analogous to r).
+
+Deab_DS: Standardized LD on the D-prime scale (analogous to D').
+
+P_Value: Rigorous Likelihood Ratio Test (LRT) statistics assessing the significance of both double reduction and linkage.
+
+Citation
+If you use AutoLD in your research, please cite our upcoming publication:
+
+Jiang, L. et al. (2026). AutoLD: A novel statistical framework for linkage disequilibrium and double reduction estimation in autopolyploids. (Submitted / In Preparation).
+
+Contact & Authors
+Jiang-Lab Systems Biology Group (SDUT-Sysbio)
+
+Shandong University of Technology
+
+Maintainer: Libo Jiang (libojiang@bjfu.edu.cn)
+
+For bug reports, feature requests, or questions regarding usage, please open an issue on the GitHub Issues page.

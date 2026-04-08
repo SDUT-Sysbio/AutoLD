@@ -38,18 +38,20 @@ library(AutoLD)
 
 # --- Example A: Autotetraploid (4x) Simulation ---
 # Simulate a 2-locus dataset (500 individuals)
-sim_data_4x <- sim_2locus_4x_cLD(n_ind = 500, pA = 0.5, pB = 0.5, D = 0.05, alphaA = 0.05, alphaB = 0.05)
+para <- c(pA = 0.6, pB = 0.4,alphaA = 1/6, alphaB = 1/7,Deab=0.05, DAb=0.02, DaB=0.01, DAB=0.002)
+sim_data_4x <- sim_2locus_4x_cLD(para=para, n=500, type="full")
 
 # Estimate LD and DR from the simulated 4x data
-sim_result_4x <- LD_test_optimized_final(sim_data_4x)
+sim_result_4x <- auto4_est(sim_data_4x)
 print(sim_result_4x)
 
 # --- Example B: Autohexaploid (6x) Simulation ---
 # Simulate a 2-locus dataset (500 individuals)
-sim_data_6x <- sim_2locus_6x_cLD(n_ind = 500, pA = 0.5, pB = 0.5, D = 0.05, alphaA = 0.05, alphaB = 0.05)
+para <- c(pA = 0.6,pB = 0.4,alphaA = 1/6,alphaB = 1/5,Deab = 0.03,DAb = 0.002,DaB = 0.005,DAAb = 0.003,DaBB = 0.002,DAB = 0.002,DAAB = 0.003,DABB = 0.003,DAABB = 0.001)
+sim_data_6x <- sim_2locus_6x_cLD(para=para, n=500, type="full")
 
 # Estimate LD and DR from the simulated 6x data
-sim_result_6x <- LD_test_optimized_final(sim_data_6x)
+sim_result_6x <- auto6_est(sim_data_6x)
 print(sim_result_6x)
 
 ```
@@ -57,7 +59,8 @@ print(sim_result_6x)
 Here is a minimal example of how to perform a genome-wide LD scan using the built-in autotetraploid Arabidopsis arenosa dataset.
 
 ```R
-data("Arenosa")
+file_path <- system.file("extdata", "Arenosa_example.RDS", package = "AutoLD")
+Arenosa <- readRDS(file_path)
 geno_df <- Arenosa$Arenosa_gen
 info_df <- Arenosa$Arenosa_gen_info
 

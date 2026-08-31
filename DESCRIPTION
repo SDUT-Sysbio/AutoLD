@@ -1,0 +1,32 @@
+Package: AutoLD
+Type: Package
+Title: Dosage-Dependent Linkage Disequilibrium in Autopolyploid Genomes
+Version: 0.2.0
+Authors@R: c(
+    person("Weihao", "Dou", role = "aut"),
+    person("Libo", "Jiang", email = "libojiang@sdut.edu.cn", role = c("aut", "cre"))
+    )
+Description: Implements a population-genetic framework for reconstructing two-locus
+    gametic dosage distributions in autopolyploids, decomposing them into orthogonal
+    dosage-dependent linkage disequilibrium components, estimating effective marginal
+    segregation distortion, performing fixed-margin normalization, simulation, and
+    marginal-preserving permutation calibration. The current package skeleton is built
+    around the core simulation and empirical genome-scan workflows.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports:
+    Rcpp,
+    data.table,
+    lpSolve,
+    parallel,
+    stats
+LinkingTo:
+    Rcpp
+SystemRequirements: C++11
+NeedsCompilation: yes
+Suggests:
+    testthat (>= 3.0.0),
+    ldsep
+Config/testthat/edition: 3
+RoxygenNote: 7.3.2

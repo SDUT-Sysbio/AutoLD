@@ -1,4 +1,7 @@
 # AutoLD
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![R](https://img.shields.io/badge/R-%3E%3D%204.1.0-276DC3?logo=r&logoColor=white)](https://www.r-project.org/)
+[![GitHub release](https://img.shields.io/github/v/release/SDUT-Sysbio/AutoLD)](https://github.com/SDUT-Sysbio/AutoLD/releases)
 
 **AutoLD** is an R/C++ framework for resolving dosage-dependent two-locus linkage disequilibrium (LD) in autopolyploid genomes.
 
